@@ -1,7 +1,27 @@
 <div>
     <h2>Add Project</h2>
     <form>
-            <input type="text" placeholder="Project name">
-            <input type="submit" value="Submit">
+        <input type="text" placeholder="Project name" ng-model="vm.projectForm.project">
+        <input type="submit" value="Submit">
     </form>
+</div>
+{{ vm.projectForm | json }}
+<div>
+    <h2>History</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>Project</td>
+                <td>Total Hours</td>
+                <td>Actions</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Project</td>
+                <td>Total Hours</td>
+                <td>Actions</td>
+            </tr>
+        </tbody>
+    </table>
 </div>

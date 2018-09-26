@@ -3,5 +3,6 @@ timeTrackerApp.controller('ManageController', [function(){
 
     console.log('in ManageController');
 
+    self.projectForm = {};
 
 }]);
