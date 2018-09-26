@@ -6,5 +6,10 @@ timeTrackerApp.config(['$routeProvider', function($routeProvider){
     }).when('/entry', {
         templateUrl: '../views/entry.html',
         controller: 'EntryController as vm'
-    })
+    }).when('/manage', {
+        templateUrl: '../views/manage.html',
+        controller: 'ManageController as vm'
+    }).otherwise({
+        template: '<h1>404</h1>'
+    });
 }]);
