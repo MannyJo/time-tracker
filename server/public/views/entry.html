@@ -1,17 +1,19 @@
 <div>
     <h2>Add Entry</h2>
     <form>
-        <input type="text" placeholder="What did you do?"><br>
-        <select>
+        <input type="text" placeholder="What did you do?" ng-model="vm.entryForm.entry"><br>
+        <select ng-model="vm.entryForm.project">
             <option value="">Project</option>
         </select>
-        <input type="date">
-        <input type="datetime">
-        <input type="datetime">
+        <input type="date" ng-model="vm.entryForm.date">
+        <input type="time" ng-model="vm.entryForm.startTime">
+        <input type="time" ng-model="vm.entryForm.endTime">
         <input type="submit" value="Submit">
     </form>
 </div>
+{{ vm.entryForm | json }}
 <div>
+    <h2>History</h2>
     <table>
         <thead>
             <tr>
