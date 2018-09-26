@@ -1,5 +1,3 @@
-console.log('client.js is loaded');
-
 const timeTrackerApp = angular.module('TimeTrackerApp', ['ngRoute']);
 
 timeTrackerApp.config(['$routeProvider', function($routeProvider){
