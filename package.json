@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/MannyJo/time-tracker#readme",
   "dependencies": {
+    "angular": "^1.7.4",
+    "angular-route": "^1.7.4",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "pg": "^7.4.3"
