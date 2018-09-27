@@ -1,11 +1,10 @@
 <div>
     <h2>Add Project</h2>
-    <form>
-        <input type="text" placeholder="Project name" ng-model="vm.projectForm.project">
+    <form ng-submit="vm.addNewProject(vm.projectForm)">
+        <input type="text" placeholder="Project name" ng-model="vm.projectForm.projectName">
         <input type="submit" value="Submit">
     </form>
 </div>
-{{ vm.projectForm | json }}
 <div>
     <h2>History</h2>
     <table>
