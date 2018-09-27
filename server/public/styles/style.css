@@ -1,0 +1,9 @@
+#navigation div {
+    background-color: rgb(203, 250, 207);
+    text-align: center;
+    height: 40px;
+}
+
+#navigation div a {
+    color: black;
+}

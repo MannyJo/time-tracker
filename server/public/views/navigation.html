@@ -1,7 +1,16 @@
 <nav>
-    <ul>
-        <li><a href="#!/entry">Add Entry</a></li>
-        <li><a href="#!/manage">Manage Projects</a></li>
-        <li><a href="#!/report">Reports</a></li>
-    </ul>
+    <div id="navigation" layout="row" layout-align="space-around center">
+        <div flex="30"><a href="#!/entry">Add Entry</a></div>
+        <div flex="30"><a href="#!/manage">Manage Projects</a></div>
+        <div flex="30"><a href="#!/report">Reports</a></div>
+    </div>
 </nav>
+<!-- <div ng-cloak>
+    <md-content class="md-padding">
+        <md-nav-bar md-no-ink-bar="disableInkBar" md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+            <md-nav-item md-nav-click="goto('page1')" name="page1">Entry</md-nav-item>
+            <md-nav-item md-nav-click="goto('page2')" name="page2">Project</md-nav-item>
+            <md-nav-item md-nav-click="goto('page3')" name="page3">Report</md-nav-item>
+        </md-nav-bar>
+    </md-content>
+</div> -->
