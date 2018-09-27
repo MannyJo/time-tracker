@@ -24,7 +24,32 @@ timeTrackerApp.controller('EntryController', ['$http', function($http){
 
     // add entries
     self.addNewEntry = function(newEntry){
-        console.log(newEntry);
+        // date
+        let year = newEntry.date.getFullYear();
+        let month = (newEntry.date.getMonth()+1)<10?'0'+newEntry.date.getMonth():newEntry.date.getMonth();
+        let date = newEntry.date.getDate()<10?'0'+newEntry.date.getDate():newEntry.date.getDate();
+
+        let workDate = year + '-' + month + '-' + date;
+
+        // time
+        let workTime = newEntry.endTime - newEntry.startTime;
+        let workHour = (workTime/1000/60/60).toFixed(1);
+        
+        objectToServer = {
+            entry: newEntry.entry,
+            project_id: newEntry.projectId,
+            work_date: workDate,
+            work_hour: workHour
+        }
+
+        $http.post('/entry', objectToServer)
+            .then(function(){
+                console.log('Adding new entry is successful');
+                self.getEntries();
+            }).catch(function(err){
+                console.log('error:', err);
+                alert('Error with adding entries');
+            });
     }
 
     self.getEntries();

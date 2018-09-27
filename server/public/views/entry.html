@@ -1,13 +1,14 @@
 <div>
     <h2>Add Entry</h2>
     <form ng-submit="vm.addNewEntry(vm.entryForm)">
-        <input type="text" placeholder="What did you do?" ng-model="vm.entryForm.entry"><br>
-        <select ng-model="vm.entryForm.project" ng-options="project.project_name for project in vm.projects" required>
+        <input type="text" placeholder="What did you do?" ng-model="vm.entryForm.entry" required><br>
+        <select ng-model="vm.entryForm.projectId" required>
             <option value="">---- select ----</option>
+            <option ng-repeat="project in vm.projects" ng-value="project.id">{{ project.project_name }}</option>
         </select>
-        <input type="date" ng-model="vm.entryForm.date">
-        <input type="time" ng-model="vm.entryForm.startTime">
-        <input type="time" ng-model="vm.entryForm.endTime">
+        <input type="date" ng-model="vm.entryForm.date" required>
+        <input type="time" ng-model="vm.entryForm.startTime" required>
+        <input type="time" ng-model="vm.entryForm.endTime" required>
         <input type="submit" value="Submit">
     </form>
 </div>
