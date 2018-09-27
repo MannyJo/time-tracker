@@ -10,16 +10,23 @@ timeTrackerApp.controller('EntryController', ['$http', function($http){
 
     // get entries
     self.getEntries = function(){
-        console.log('getting entries');
         $http.get('/entry')
             .then(function(response){
-                console.log(response.data.entries);
-                console.log(response.data.projects);
-                self.projects = response.data.projects;
-                self.entries = response.data.entries;
+                self.entries = response.data;
             }).catch(function(err){
                 console.log('error:', err);
                 alert('Error with getting entries');
+            });
+    }
+
+    // get project list
+    self.getProjectList = function(){
+        $http.get('/manage')
+            .then(function(response){
+                self.projects = response.data.rows;
+            }).catch(function(err){
+                console.log('error:', err);
+                alert('Error with getting projects');
             });
     }
 
@@ -53,6 +60,7 @@ timeTrackerApp.controller('EntryController', ['$http', function($http){
             });
     }
 
+    self.getProjectList();
     self.getEntries();
 
 }]);

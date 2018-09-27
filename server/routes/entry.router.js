@@ -8,48 +8,26 @@ router.get('/', (req, res) => {
     // TODO : moving to somewhere later
     let selectEntryQueryStr = `
         SELECT
-            "id",
-            "entry",
-            "project_id",
-            to_char("work_date", 'yyyy-MM-dd') as "work_date",
-            "work_hour"
+            e1."id",
+            e1."entry",
+            p1."project_name",
+            to_char(e1."work_date", 'yyyy-MM-dd') as "work_date",
+            e1."work_hour"
         FROM
-            "entries"
+            "entries" e1
+            JOIN "projects" p1
+                ON e1."project_id" = p1."id"
         ORDER BY
-            "id" DESC
+            e1."id" DESC
         ;
     `;
-
-    let selectProjectQueryStr = `
-        SELECT
-            *
-        FROM
-            "projects"
-        ORDER BY
-            "id" DESC
-        ;
-    `;
-
-    let projectList = [];
-
-    pool.query(selectProjectQueryStr)
-        .then(projectResults => {
-            projectList = projectResults.rows;
-            pool.query(selectEntryQueryStr)
-                .then(results => {
-                    console.log('Results :', results.rows);
-                    console.log('projectList :', projectList);
-                    let objectToClient = {
-                        entries: results.rows,
-                        projects: projectList
-                    };
-                    res.send(objectToClient);
-                }).catch(err => {
-                    console.log('Error with searching entries table :', err);
-                    res.sendStatus(500);
-                });
+    
+    pool.query(selectEntryQueryStr)
+        .then(results => {
+            console.log('Results :', results.rows);
+            res.send(results.rows);
         }).catch(err => {
-            console.log('Error with searching projects table in entry :', err);
+            console.log('Error with searching entries table :', err);
             res.sendStatus(500);
         });
 });
