@@ -16,7 +16,7 @@ Trello Board: [https://trello.com/b/WUa7rOxR/time-tracker-sample](https://trello
 ```
 CREATE TABLE "projects" (
 	"id" SERIAL PRIMARY KEY,
-	"project" VARCHAR(100) NOT NULL
+	"project_name" VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE "entries" (

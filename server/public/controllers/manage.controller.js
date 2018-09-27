@@ -8,7 +8,7 @@ timeTrackerApp.controller('ManageController', ['$http', function($http){
     self.getProjectList = function(){
         $http.get('/manage')
             .then(function(response){
-                console.log('Response : ', response);
+                console.log('Response : ', response.data);
             }).catch(function(error){
                 console.log('error:', error);
                 alert('Error with getting projects');

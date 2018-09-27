@@ -17,8 +17,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Project</td>
+            <tr ng-repeat="project in vm.projects">
+                <td>{{ project.project_name }}</td>
                 <td>Total Hours</td>
                 <td>Actions</td>
             </tr>
