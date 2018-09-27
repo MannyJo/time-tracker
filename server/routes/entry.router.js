@@ -8,7 +8,11 @@ router.get('/', (req, res) => {
     // TODO : moving to somewhere later
     let selectEntryQueryStr = `
         SELECT
-            *
+            "id",
+            "entry",
+            "project_id",
+            to_char("work_date", 'yyyy-MM-dd') as "work_date",
+            "work_hour"
         FROM
             "entries"
         ORDER BY
@@ -36,8 +40,8 @@ router.get('/', (req, res) => {
                     console.log('Results :', results.rows);
                     console.log('projectList :', projectList);
                     let objectToClient = {
-                        entries : results.rows,
-                        projects : projectList
+                        entries: results.rows,
+                        projects: projectList
                     };
                     res.send(objectToClient);
                 }).catch(err => {
@@ -50,6 +54,33 @@ router.get('/', (req, res) => {
         });
 });
 
-// router.post()
+router.post('/', (req, res) => {
+    console.log('in /entry POST');
+
+    console.log('Request :', req.body);
+
+    // TODO : moving to somewhere later
+    let insertNewEntry = `
+        INSERT INTO "entries" (
+            "entry", 
+            "project_id", 
+            "work_date", 
+            "work_hour")
+        VALUES ($1, $2, $3, $4)
+        ;
+    `;
+
+    pool.query(insertNewEntry, [
+        req.body.entry,
+        req.body.project_id,
+        req.body.work_date,
+        req.body.work_hour
+    ]).then(() => {
+        res.sendStatus(201);
+    }).catch(err => {
+        console.log('Error with inserting entries table :', err);
+        res.sendStatus(500);
+    });
+});
 
 module.exports = router;

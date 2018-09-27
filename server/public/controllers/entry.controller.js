@@ -16,6 +16,7 @@ timeTrackerApp.controller('EntryController', ['$http', function($http){
                 console.log(response.data.entries);
                 console.log(response.data.projects);
                 self.projects = response.data.projects;
+                self.entries = response.data.entries;
             }).catch(function(err){
                 console.log('error:', err);
                 alert('Error with getting entries');
@@ -26,7 +27,7 @@ timeTrackerApp.controller('EntryController', ['$http', function($http){
     self.addNewEntry = function(newEntry){
         // date
         let year = newEntry.date.getFullYear();
-        let month = (newEntry.date.getMonth()+1)<10?'0'+newEntry.date.getMonth():newEntry.date.getMonth();
+        let month = (newEntry.date.getMonth()+1)<10?'0'+(newEntry.date.getMonth()+1):(newEntry.date.getMonth()+1);
         let date = newEntry.date.getDate()<10?'0'+newEntry.date.getDate():newEntry.date.getDate();
 
         let workDate = year + '-' + month + '-' + date;

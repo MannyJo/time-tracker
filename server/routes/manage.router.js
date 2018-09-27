@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
 
     pool.query(insertQueryStr, [projectName])
         .then(() => {
-            res.sendStatus(200);
+            res.sendStatus(201);
         }).catch(err => {
             console.log('Error with inserting new project');
             res.sendStatus(500);
