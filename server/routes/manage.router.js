@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
             // console.log('Results :', results);
             res.send(results);
         }).catch(err => {
-            console.log('Error with searching projects table');
+            console.log('Error with searching projects table :', err);
             res.sendStatus(500);
         });
 });
@@ -48,7 +48,7 @@ router.post('/', (req, res) => {
         .then(() => {
             res.sendStatus(201);
         }).catch(err => {
-            console.log('Error with inserting new project');
+            console.log('Error with inserting new project :', err);
             res.sendStatus(500);
         });
 });

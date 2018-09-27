@@ -7,3 +7,7 @@
 #navigation div a {
     color: black;
 }
+
+#projectSubmitBtn {
+    text-align: right;
+}

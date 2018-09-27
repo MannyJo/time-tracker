@@ -1,9 +1,18 @@
-<div>
+<div layout-margin>
     <h2>Add Project</h2>
-    <form ng-submit="vm.addNewProject(vm.projectForm)">
-        <input type="text" placeholder="Project name" ng-model="vm.projectForm.projectName">
-        <input type="submit" value="Submit">
-    </form>
+    <md-content layout-padding>
+        <form ng-submit="vm.addNewProject(vm.projectForm)">
+            <div layout="column">
+                <md-input-container class="md-block">
+                    <label>Project Name</label>
+                    <input required name="projectName" ng-model="vm.projectForm.projectName">
+                    <div id="projectSubmitBtn">
+                        <md-button type="submit" class="md-primary md-raised">Submit</md-button>
+                    </div>
+                </md-input-container>
+            </div>
+        </form>
+    </md-content>
 </div>
 <div>
     <h2>History</h2>
