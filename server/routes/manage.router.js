@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
     pool.query(selectQueryStr)
         .then(results => {
-            console.log('Results :', results);
+            // console.log('Results :', results);
             res.send(results);
         }).catch(err => {
             console.log('Error with searching projects table');
@@ -31,6 +31,7 @@ router.post('/', (req, res) => {
 
     let projectName = req.body.projectName;
 
+    // TODO : moving to somewhere later
     let insertQueryStr = `
         INSERT INTO "projects" ( "project_name" )
         VALUES ( $1 )

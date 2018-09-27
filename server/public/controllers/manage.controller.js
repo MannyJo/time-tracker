@@ -3,6 +3,7 @@ timeTrackerApp.controller('ManageController', ['$http', function($http){
 
     console.log('in ManageController');
 
+    self.projects = [];
     self.projectForm = {};
 
     // get all projects
@@ -10,6 +11,7 @@ timeTrackerApp.controller('ManageController', ['$http', function($http){
         $http.get('/manage')
             .then(function(response){
                 console.log('Response : ', response.data);
+                self.projects = response.data.rows;
             }).catch(function(err){
                 console.log('error:', err);
                 alert('Error with getting projects');

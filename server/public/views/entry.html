@@ -1,9 +1,9 @@
 <div>
     <h2>Add Entry</h2>
-    <form>
+    <form ng-submit="vm.addNewEntry(vm.entryForm)">
         <input type="text" placeholder="What did you do?" ng-model="vm.entryForm.entry"><br>
-        <select ng-model="vm.entryForm.project">
-            <option value="">Project</option>
+        <select ng-model="vm.entryForm.project" ng-options="project.project_name for project in vm.projects" required>
+            <option value="">---- select ----</option>
         </select>
         <input type="date" ng-model="vm.entryForm.date">
         <input type="time" ng-model="vm.entryForm.startTime">
@@ -11,25 +11,24 @@
         <input type="submit" value="Submit">
     </form>
 </div>
-{{ vm.entryForm | json }}
 <div>
     <h2>History</h2>
     <table>
         <thead>
             <tr>
-                <td>Entry</td>
-                <td>Project</td>
-                <td>Date</td>
-                <td>Hours</td>
-                <td>Actions</td>
+                <th>Entry</th>
+                <th>Project</th>
+                <th>Date</th>
+                <th>Hours</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Entry</td>
-                <td>Project</td>
-                <td>Date</td>
-                <td>Hours</td>
+            <tr ng-repeat="entry in vm.entries">
+                <td>{{ entry.entry }}</td>
+                <td>{{ entry.project_id }}</td>
+                <td>{{ entry.work_date }}</td>
+                <td>{{ entry.work_hour }}</td>
                 <td>Actions</td>
             </tr>
         </tbody>

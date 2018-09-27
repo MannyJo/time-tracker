@@ -24,7 +24,7 @@ CREATE TABLE "entries" (
 	"entry" VARCHAR(255) NOT NULL,
 	"project_id" INTEGER NOT NULL REFERENCES "projects",
 	"work_date" DATE NOT NULL,
-	"work_hour" NUMERIC(8, 2) NOT NULL
+	"work_hour" NUMERIC(8,1) NOT NULL
 );
 ```
 
