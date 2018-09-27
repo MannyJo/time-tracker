@@ -12,6 +12,22 @@ Trello Board: [https://trello.com/b/WUa7rOxR/time-tracker-sample](https://trello
 - Delete existing entries
 - Show total hours worked next to each project on the project page
 
+### Database
+```
+CREATE TABLE "projects" (
+	"id" SERIAL PRIMARY KEY,
+	"project" VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE "entries" (
+	"id" SERIAL PRIMARY KEY,
+	"entry" VARCHAR(255) NOT NULL,
+	"project_id" INTEGER NOT NULL REFERENCES "projects",
+	"work_date" DATE NOT NULL,
+	"work_hour" NUMERIC(8, 2) NOT NULL
+);
+```
+
 ### Wireframes
 
 #### Add Time Entry View
