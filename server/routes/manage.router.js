@@ -8,11 +8,17 @@ router.get('/', (req, res) => {
     // TODO : moving to somewhere later
     let selectQueryStr = `
         SELECT
-            *
+            pr1."id",
+            pr1."project_name",
+            SUM(en1."work_hour") as "total_hours"
         FROM
-            "projects"
+            "projects" pr1
+            JOIN "entries" en1
+                ON pr1."id" = en1."project_id"
+        GROUP BY
+            pr1."id"
         ORDER BY
-            "id" DESC
+            pr1."id" DESC
         ;
     `;
 
