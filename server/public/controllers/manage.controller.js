@@ -1,4 +1,4 @@
-timeTrackerApp.controller('ManageController', ['$http', function($http){
+timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function($http, $mdDialog){
     let self = this;
 
     console.log('in ManageController');
@@ -50,6 +50,34 @@ timeTrackerApp.controller('ManageController', ['$http', function($http){
                 alert('Error with deleting project');
             });
         }
+    }
+
+    self.updateProjectName = function(ev, id){
+        let confirm = $mdDialog.prompt()
+            .title('Do you want to change this project name?')
+            .textContent('Bowser is a common name.')
+            .placeholder('Project Name')
+            .ariaLabel('Project Name')
+            .initialValue('')
+            .targetEvent(ev)
+            .required(true)
+            .ok('Update the Name!')
+            .cancel('I will do later');
+
+        $mdDialog.show(confirm).then(function(result) {
+            console.log(result, id);
+            $http({
+                method: 'PUT',
+                url: '/manage/update',
+                data: {
+                    project_name: result,
+                    id: id
+                }
+            }).then(function(){
+                alert('Updated');
+                self.getProjectList();
+            })
+        }, function() {});
     }
 
     self.getProjectList();

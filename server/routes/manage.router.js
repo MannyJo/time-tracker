@@ -54,6 +54,8 @@ router.post('/', (req, res) => {
 });
 
 router.delete('/delete', (req, res) => {
+    console.log('in /manage/delete DELETE');
+
     let deleteProject = `
         DELETE FROM "projects"
         WHERE "id" = $1
@@ -67,6 +69,24 @@ router.delete('/delete', (req, res) => {
             console.log('Error with deleting projects table :', err);
             res.sendStatus(500);
         });
-})
+});
+
+router.put('/update', (req, res) => {
+    console.log('in /manage/update PUT');
+    let updateProject = `
+        UPDATE "projects"
+        SET "project_name" = $1
+        WHERE "id" = $2
+        ;
+    `;
+
+    pool.query(updateProject, [req.body.project_name, req.body.id])
+        .then(() => {
+            res.sendStatus(200);
+        }).catch(err => {
+            console.log('Error with updating projects table :', err);
+            res.sendStatus(500);
+        });
+});
 
 module.exports = router;

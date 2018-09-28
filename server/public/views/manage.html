@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="project in vm.projects">
-                    <td>{{ project.project_name }}</td>
+                    <td ng-click="vm.updateProjectName($event, project.id)">{{ project.project_name }}</td>
                     <td>{{ project.total_hours }}</td>
                     <td>
                         <md-button ng-click="vm.deleteProject(project)" class="md-warn">Delete</md-button>
