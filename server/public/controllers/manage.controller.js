@@ -32,6 +32,26 @@ timeTrackerApp.controller('ManageController', ['$http', function($http){
             });
     }
 
+    // delete project
+    self.deleteProject = function(project) {
+        let totTime = Number(project.total_hours);
+        if(totTime > 0){
+            alert('No No NO NOOOOOOOOO !!!!');
+        } else {
+            $http({
+                method: 'DELETE',
+                url: '/manage/delete',
+                params: project
+            }).then(function(){
+                console.log('deleting a project is successful');
+                self.getProjectList();
+            }).catch(function(err){
+                console.log('error:', err);
+                alert('Error with deleting project');
+            });
+        }
+    }
+
     self.getProjectList();
 
 }]);

@@ -10,10 +10,10 @@ router.get('/', (req, res) => {
         SELECT
             pr1."id",
             pr1."project_name",
-            SUM(en1."work_hour") as "total_hours"
+            SUM(COALESCE(en1."work_hour", 0)) as "total_hours"
         FROM
             "projects" pr1
-            JOIN "entries" en1
+            LEFT OUTER JOIN "entries" en1
                 ON pr1."id" = en1."project_id"
         GROUP BY
             pr1."id"
@@ -52,5 +52,21 @@ router.post('/', (req, res) => {
             res.sendStatus(500);
         });
 });
+
+router.delete('/delete', (req, res) => {
+    let deleteProject = `
+        DELETE FROM "projects"
+        WHERE "id" = $1
+        ;
+    `;
+
+    pool.query(deleteProject, [req.query.id])
+        .then(() => {
+            res.sendStatus(200);
+        }).catch(err => {
+            console.log('Error with deleting projects table :', err);
+            res.sendStatus(500);
+        });
+})
 
 module.exports = router;

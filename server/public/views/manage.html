@@ -1,35 +1,45 @@
-<div layout-margin>
+<div class="inputForms" layout-margin>
     <h2>Add Project</h2>
-    <md-content layout-padding>
-        <form ng-submit="vm.addNewProject(vm.projectForm)">
-            <div layout="column">
-                <md-input-container class="md-block">
-                    <label>Project Name</label>
-                    <input required name="projectName" ng-model="vm.projectForm.projectName">
-                    <div id="projectSubmitBtn">
-                        <md-button type="submit" class="md-primary md-raised">Submit</md-button>
-                    </div>
-                </md-input-container>
+    <form name="projectForm" ng-submit="vm.addNewProject(vm.projectForm)">
+        <div layout="column">
+            <md-input-container class="md-block">
+                <label>Project Name</label>
+                <input name="projectName" ng-model="vm.projectForm.projectName" required>
+                <div ng-messages="projectForm.projectName.$error" role="alert">
+                    <div ng-message="required">Can't submit without project name.</div>
+                </div>
+            </md-input-container>
+            <div id="projectSubmitBtn">
+                <md-button type="submit" class="md-primary md-raised">Submit</md-button>
             </div>
-        </form>
-    </md-content>
+        </div>
+    </form>
 </div>
-<div>
-    <h2>History</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Project</th>
-                <th>Total Hours</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="project in vm.projects">
-                <td>{{ project.project_name }}</td>
-                <td>{{ project.total_hours }}</td>
-                <td>Delete</td>
-            </tr>
-        </tbody>
-    </table>
+<div layout-margin>
+    <h2>Projects</h2>
+    <div layout="column">
+        <table class="table" id="projectTable">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Total Hours</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="project in vm.projects">
+                    <td>{{ project.project_name }}</td>
+                    <td>{{ project.total_hours }}</td>
+                    <td>
+                        <md-button ng-click="vm.deleteProject(project)" class="md-warn">Delete</md-button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tableFooter">
+                    <td colspan="3"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 </div>

@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
             e1."id" DESC
         ;
     `;
-    
+
     pool.query(selectEntryQueryStr)
         .then(results => {
             console.log('Results :', results.rows);
@@ -59,6 +59,22 @@ router.post('/', (req, res) => {
         console.log('Error with inserting entries table :', err);
         res.sendStatus(500);
     });
+});
+
+router.delete('/delete', (req, res) => {
+    let deleteEntry = `
+        DELETE FROM "entries"
+        WHERE "id" = $1
+        ;
+    `;
+
+    pool.query(deleteEntry, [req.query.id])
+        .then(() => {
+            res.sendStatus(200);
+        }).catch(err => {
+            console.log('Error with deleting entries table :', err);
+            res.sendStatus(500);
+        });
 });
 
 module.exports = router;

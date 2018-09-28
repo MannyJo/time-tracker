@@ -2,7 +2,7 @@ const timeTrackerApp = angular.module('TimeTrackerApp', ['ngRoute', 'ngMaterial'
 
 timeTrackerApp.config(['$routeProvider', function($routeProvider){
     $routeProvider.when('/', {
-        template: '<h1>Hello</h1>'
+        template: '<h2>Hello Kitty You\'re so pretty!</h2>'
     }).when('/entry', {
         templateUrl: '../views/entry.html',
         controller: 'EntryController as vm'
