@@ -3,10 +3,18 @@ timeTrackerApp.controller('EntryController', ['$http', function($http){
 
     console.log('in EntryController');
 
+    self.orderBy = '';
+    self.reverse = '';
     self.projects = [];
     self.entryForm = {
         date: new Date()
     };
+
+    // order by keyword
+    self.orderByKeyword = function(keyword){
+        self.reverse = (self.orderBy===keyword)?!self.reverse:false;
+        self.orderBy = keyword;
+    }
 
     // delete entry
     self.deleteEntry = function(entry){
@@ -27,6 +35,7 @@ timeTrackerApp.controller('EntryController', ['$http', function($http){
     self.getEntries = function(){
         $http.get('/entry')
             .then(function(response){
+                console.log(response.data);
                 self.entries = response.data;
             }).catch(function(err){
                 console.log('error:', err);

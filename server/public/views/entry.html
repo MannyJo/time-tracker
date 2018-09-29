@@ -30,14 +30,20 @@
             <thead>
                 <tr>
                     <th>Entry</th>
-                    <th>Project</th>
-                    <th>Date</th>
-                    <th>Hours</th>
+                    <th ng-click="vm.orderByKeyword('project_name')">Project
+                        <span class="sortorder" ng-show="vm.orderBy === 'project_name'" ng-class="{reverse: vm.reverse}"></span>
+                    </th>
+                    <th ng-click="vm.orderByKeyword('work_date')">Date
+                        <span class="sortorder" ng-show="vm.orderBy === 'work_date'" ng-class="{reverse: vm.reverse}"></span>
+                    </th>
+                    <th ng-click="vm.orderByKeyword('work_hour')">Hours
+                        <span class="sortorder" ng-show="vm.orderBy === 'work_hour'" ng-class="{reverse: vm.reverse}"></span>
+                    </th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="entry in vm.entries">
+                <tr ng-repeat="entry in vm.entries | orderBy:vm.orderBy:vm.reverse">
                     <td>{{ entry.entry }}</td>
                     <td>{{ entry.project_name }}</td>
                     <td>{{ entry.work_date }}</td>

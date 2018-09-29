@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
             e1."id",
             e1."entry",
             p1."project_name",
-            to_char(e1."work_date", 'yyyy-MM-dd') as "work_date",
+            TO_CHAR(e1."work_date", 'yyyy-MM-dd') AS "work_date",
             e1."work_hour"
         FROM
             "entries" e1
@@ -24,7 +24,9 @@ router.get('/', (req, res) => {
 
     pool.query(selectEntryQueryStr)
         .then(results => {
-            console.log('Results :', results.rows);
+            for(row of results.rows){
+                row.work_hour = parseFloat(row.work_hour)
+            }
             res.send(results.rows);
         }).catch(err => {
             console.log('Error with searching entries table :', err);
