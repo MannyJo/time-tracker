@@ -54,7 +54,8 @@ router.post('/', (req, res) => {
 
     let overlapDetect = `
         SELECT 
-            COUNT(*) as "cnt"
+            SUBSTR("start_time", 1, 2) || ':' || SUBSTR("start_time", 3, 2) AS "start_time",
+            SUBSTR("end_time", 1, 2) || ':' || SUBSTR("end_time", 3, 2) AS "end_time"
         FROM 
             "entries"
         WHERE 
@@ -73,11 +74,16 @@ router.post('/', (req, res) => {
         req.body.start_time,
         req.body.end_time
     ]).then(results => {
-        if(Number(results.rows[0].cnt) > 0){
-            console.log('Duplicated entry count :',results.rows[0].cnt);
-            res.status(400).send('Cannot insert the data due to time duplication');
+        if(results.rowCount > 0){
+            console.log('Duplicated entry count :',results.rowCount);
+            let objectToClient = {
+                message: 'Cannot insert the data due to time duplication',
+                duplicated_time: results.rows
+            };
+
+            res.status(400).send(objectToClient);
         } else {
-            console.log('Duplicated entry count :',results.rows[0].cnt);
+            console.log('Duplicated entry count :',results.rowCount);
             pool.query(insertNewEntry, [
                 req.body.entry,
                 req.body.project_id,

@@ -114,16 +114,21 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
                     self.getEntries();
                 }).catch(function (err) {
                     if(err.status === 400){
+                        let content = '<b>Duplicated time</b>';
+
+                        for(let time of err.data.duplicated_time){
+                            content += '<br> > ' + time.start_time + ' ~ ' + time.end_time;
+                        }
+
                         $mdDialog.show(
                             $mdDialog.alert()
                                 .clickOutsideToClose(true)
-                                .title(err.data)
-                                .textContent('Please change the time and try again')
-                                .ariaLabel(err.data)
+                                .title(err.data.message)
+                                .htmlContent(content)
+                                .ariaLabel(err.data.message)
                                 .ok('OK')
                         );
                     } else {
-                        alert('Error with adding entries');
                         $mdDialog.show(
                             $mdDialog.alert()
                                 .clickOutsideToClose(true)
