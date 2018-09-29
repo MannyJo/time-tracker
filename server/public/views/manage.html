@@ -1,17 +1,17 @@
 <div class="inputForms" layout-margin>
     <h2>Add Project</h2>
     <form name="projectForm" ng-submit="vm.addNewProject(vm.projectForm)">
-        <div layout="column">
-            <md-input-container class="md-block">
+        <div layout="row" layout-xs="column">
+            <md-input-container flex class="md-block">
                 <label>Project Name</label>
                 <input name="projectName" ng-model="vm.projectForm.projectName" required>
                 <div ng-messages="projectForm.projectName.$error" role="alert">
                     <div ng-message="required">Can't submit without project name.</div>
                 </div>
             </md-input-container>
-            <div id="projectSubmitBtn">
+            <md-input-container flex="15" flex-xs="100" id="projectSubmitBtn">
                 <md-button type="submit" class="md-primary md-raised">Submit</md-button>
-            </div>
+            </md-input-container>
         </div>
     </form>
 </div>
@@ -21,14 +21,18 @@
         <table class="table" id="projectTable">
             <thead>
                 <tr>
-                    <th>Project</th>
-                    <th>Total Hours</th>
+                    <th ng-click="vm.orderByKeyword('project_name')">Project
+                        <span class="sortorder" ng-show="vm.orderBy === 'project_name'" ng-class="{reverse: vm.reverse}"></span>
+                    </th>
+                    <th ng-click="vm.orderByKeyword('total_hours')">Total Hours
+                        <span class="sortorder" ng-show="vm.orderBy === 'total_hours'" ng-class="{reverse: vm.reverse}"></span>
+                    </th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="project in vm.projects">
-                    <td ng-click="vm.updateProjectName($event, project.id)">{{ project.project_name }}</td>
+                <tr ng-repeat="project in vm.projects | orderBy:vm.orderBy:vm.reverse">
+                    <td ng-click="vm.updateProjectName($event, project)">{{ project.project_name }}</td>
                     <td>{{ project.total_hours }}</td>
                     <td>
                         <md-button ng-click="vm.deleteProject(project)" class="md-warn">Delete</md-button>

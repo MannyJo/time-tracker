@@ -49,6 +49,13 @@ h1 {
     text-align: right;
 }
 
+.sortorder:after {
+  content: '\25b2';
+}
+.sortorder.reverse:after {
+  content: '\25bc';
+}
+
 #entryTable tbody td:first-child {
     width: 45%;
 }
