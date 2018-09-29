@@ -1,61 +1,92 @@
-<div class="inputForms" layout-margin>
-    <h2>Add Entry</h2>
-    <form name="entryForm" ng-submit="vm.addNewEntry(vm.entryForm)">
-        <md-input-container class="md-block">
-            <label>Entry</label>
-            <input required name="entryContent" ng-model="vm.entryForm.entry" placeholder="What did you do?">
-            <div ng-messages="entryForm.entryContent.$error" role="alert">
-                <div ng-message="required">Can't submit without entry content.</div>
-            </div>
-        </md-input-container>
-        <md-input-container>
-            <label>Project</label>
-            <md-select name="projectSelect" ng-model="vm.entryForm.projectId" required>
-                <md-option ng-repeat="project in vm.projects" ng-value="project.id">{{ project.project_name }}</md-option>
-            </md-select>
-            <div ng-messages="entryForm.projectSelect.$error" role="alert">
-                <div ng-message="required">Can't submit without selecting project.</div>
-            </div>
-        </md-input-container>
-        <md-datepicker ng-model="vm.entryForm.date" required></md-datepicker>
-        <input type="time" ng-model="vm.entryForm.startTime" required>
-        <input type="time" ng-model="vm.entryForm.endTime" required>
-        <md-button type="submit" class="md-primary md-raised">Submit</md-button>
-    </form>
-</div>
-<div layout-margin>
-    <h2>History</h2>
-    <div layout="column">
-        <table class="table" id="entryTable">
-            <thead>
-                <tr>
-                    <th>Entry</th>
-                    <th ng-click="vm.orderByKeyword('project_name')">Project
-                        <span class="sortorder" ng-show="vm.orderBy === 'project_name'" ng-class="{reverse: vm.reverse}"></span>
-                    </th>
-                    <th ng-click="vm.orderByKeyword('work_date')">Date
-                        <span class="sortorder" ng-show="vm.orderBy === 'work_date'" ng-class="{reverse: vm.reverse}"></span>
-                    </th>
-                    <th ng-click="vm.orderByKeyword('work_hour')">Hours
-                        <span class="sortorder" ng-show="vm.orderBy === 'work_hour'" ng-class="{reverse: vm.reverse}"></span>
-                    </th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="entry in vm.entries | orderBy:vm.orderBy:vm.reverse">
-                    <td>{{ entry.entry }}</td>
-                    <td>{{ entry.project_name }}</td>
-                    <td>{{ entry.work_date }}</td>
-                    <td>{{ entry.work_hour }}</td>
-                    <td><md-button ng-click="vm.deleteEntry(entry)" class="md-warn">Delete</md-button></td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr class="tableFooter">
-                    <td colspan="5"></td>
-                </tr>
-            </tfoot>
-        </table>
+<div layout="column">
+    <div layout="row">
+        <div flex></div>
+        <div flex="60" flex-sm="70" flex-xs="100" class="inputForms" id="entryFormDiv" layout-margin>
+            <h2>Add Entry</h2>
+            <form name="entryForm" ng-submit="vm.addNewEntry(vm.entryForm, entryForm)">
+                <md-input-container class="md-block">
+                    <label>Entry</label>
+                    <input required name="entryContent" ng-model="vm.entryForm.entry" placeholder="What did you do?">
+                    <div ng-messages="entryForm.entryContent.$error" role="alert">
+                        <div ng-message="required">Can't submit without entry content</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>Project</label>
+                    <md-select name="projectSelect" ng-model="vm.entryForm.projectId" required>
+                        <md-option ng-repeat="project in vm.projects" ng-value="project.id">{{ project.project_name }}</md-option>
+                    </md-select>
+                    <div ng-messages="entryForm.projectSelect.$error" role="alert">
+                        <div ng-message="required">Can't submit without project</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>Project</label>
+                    <md-datepicker ng-model="vm.entryForm.date" name="date" required></md-datepicker>
+                    <div ng-messages="entryForm.date.$error" role="alert">
+                        <div ng-message="required">Can't submit without date</div>
+                    </div>
+                </md-input-container>
+                <div>
+                    <md-input-container>
+                        <label>Start Time</label>
+                        <input type="time" name="startTime" ng-model="vm.entryForm.startTime" required>
+                        <div ng-messages="entryForm.startTime.$error" role="alert">
+                            <div ng-message="required">Can't submit without start time</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>End Time</label>
+                        <input type="time" name="endTime" ng-model="vm.entryForm.endTime" required>
+                        <div ng-messages="entryForm.endTime.$error" role="alert">
+                            <div ng-message="required">Can't submit without end time</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div class="submitBtn">
+                    <md-button type="submit" class="md-primary md-raised">Submit</md-button>
+                </div>
+            </form>
+        </div>
+        <div flex></div>
+    </div>
+    <div layout-margin>
+        <h2>History</h2>
+        <div layout="column">
+            <table class="table" id="entryTable">
+                <thead>
+                    <tr>
+                        <th>Entry</th>
+                        <th ng-click="vm.orderByKeyword('project_name')">Project
+                            <span class="sortorder" ng-show="vm.orderBy === 'project_name'" ng-class="{reverse: vm.reverse}"></span>
+                        </th>
+                        <th ng-click="vm.orderByKeyword('work_date')">Date
+                            <span class="sortorder" ng-show="vm.orderBy === 'work_date'" ng-class="{reverse: vm.reverse}"></span>
+                        </th>
+                        <th ng-click="vm.orderByKeyword('work_hour')">Hours
+                            <span class="sortorder" ng-show="vm.orderBy === 'work_hour'" ng-class="{reverse: vm.reverse}"></span>
+                        </th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="entry in vm.entries | orderBy:vm.orderBy:vm.reverse">
+                        <td>{{ entry.entry }}</td>
+                        <td>{{ entry.project_name }}</td>
+                        <td>{{ entry.work_date }}</td>
+                        <td>{{ entry.work_hour }}</td>
+                        <td>
+                                <md-button ng-click="vm.deleteEntry(entry)" class="md-warn">Delete</md-button><br>
+                                <md-button ng-click="vm.updateEntry(entry)" class="md-warn">Update</md-button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tableFooter">
+                        <td colspan="5"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </div>

@@ -79,7 +79,7 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
     }
 
     // add entries
-    self.addNewEntry = function (newEntry) {
+    self.addNewEntry = function (newEntry, newClntForm) {
         // in entry.html, cannot check select require, so I put conditional for checking project value
         if (newEntry.projectId) {
             // time
@@ -111,12 +111,18 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
                             .ariaLabel('Your entry has been successfully added')
                             .ok('OK')
                     );
+                    self.entryForm = {
+                        date: new Date()
+                    };
+                    newClntForm.$setPristine();
+                    newClntForm.$setUntouched();
                     self.getEntries();
                 }).catch(function (err) {
-                    if(err.status === 400){
+                    // if there is duplicated time, show the message of the time
+                    if (err.status === 400) {
                         let content = '<b>Duplicated time</b>';
 
-                        for(let time of err.data.duplicated_time){
+                        for (let time of err.data.duplicated_time) {
                             content += '<br> > ' + time.start_time + ' ~ ' + time.end_time;
                         }
 
@@ -141,6 +147,22 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
                 });
         }
     }
+
+    self.updateEntry = function (ev) {
+        $mdDialog.show({
+            controller: DialogController,
+            templateUrl: 'dialog1.tmpl.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+        })
+            .then(function (answer) {
+                $scope.status = 'You said the information was "' + answer + '".';
+            }, function () {
+                $scope.status = 'You cancelled the dialog.';
+            });
+    };
 
     self.getProjectList();
     self.getEntries();

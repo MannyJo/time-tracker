@@ -50,13 +50,11 @@ h1 {
 }
 
 #projectTable , 
-#entryTable tbody td:nth-child(3), 
-#entryTable tbody td:nth-child(4), 
-#entryTable tbody td:nth-child(5) {
+#entryTable tbody td:not(:nth-child(1)) {
     text-align: center;
 }
 
-#projectSubmitBtn {
+.submitBtn {
     text-align: right;
 }
 
@@ -68,5 +66,9 @@ h1 {
 }
 
 #entryTable tbody td:first-child {
-    width: 45%;
+    width: 40%;
+}
+
+#entryFormDiv {
+    height: 450px;
 }

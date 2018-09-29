@@ -26,7 +26,7 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
     }
 
     // add new project
-    self.addNewProject = function (newProject) {
+    self.addNewProject = function (newProject, newClntForm) {
         $http.post('/manage', newProject)
             .then(function () {
                 $mdDialog.show(
@@ -38,6 +38,8 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
                         .ok('Back to Work')
                 );
                 self.projectForm = {};
+                newClntForm.$setPristine();
+                newClntForm.$setUntouched();
                 self.getProjectList();
             }).catch(function (err) {
                 console.log('error:', err);

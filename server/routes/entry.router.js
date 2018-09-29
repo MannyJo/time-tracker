@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
             e1."id",
             e1."entry",
             p1."project_name",
-            TO_CHAR(e1."work_date", 'yyyy-MM-dd') AS "work_date",
+            TO_CHAR(e1."work_date", 'MM/dd/yyyy') AS "work_date",
             e1."work_hour"
         FROM
             "entries" e1
@@ -37,8 +37,6 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     console.log('in /entry POST');
 
-    console.log('Request :', req.body);
-
     // TODO : moving to somewhere later
     let insertNewEntry = `
         INSERT INTO "entries" (
@@ -59,17 +57,19 @@ router.post('/', (req, res) => {
         FROM 
             "entries"
         WHERE 
-            "work_date" = $1
+            "project_id" = $1
+            AND "work_date" = $2
             AND (
-                $2 BETWEEN "start_time" AND "end_time"
-                OR $3 BETWEEN "start_time" AND "end_time"
-                OR "start_time" BETWEEN $2 AND $3
-                OR "end_time" BETWEEN $2 AND $3
+                $3 BETWEEN "start_time" AND "end_time"
+                OR $4 BETWEEN "start_time" AND "end_time"
+                OR "start_time" BETWEEN $3 AND $4
+                OR "end_time" BETWEEN $3 AND $4
             )
         ;
     `;
 
     pool.query(overlapDetect, [
+        req.body.project_id,
         req.body.work_date,
         req.body.start_time,
         req.body.end_time
