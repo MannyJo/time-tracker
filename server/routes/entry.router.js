@@ -45,22 +45,58 @@ router.post('/', (req, res) => {
             "entry", 
             "project_id", 
             "work_date", 
-            "work_hour")
-        VALUES ($1, $2, $3, $4)
+            "work_hour",
+            "start_time",
+            "end_time")
+        VALUES ($1, $2, $3, $4, $5, $6)
         ;
     `;
 
-    pool.query(insertNewEntry, [
-        req.body.entry,
-        req.body.project_id,
+    let overlapDetect = `
+        SELECT 
+            COUNT(*) as "cnt"
+        FROM 
+            "entries"
+        WHERE 
+            "work_date" = $1
+            AND (
+                $2 BETWEEN "start_time" AND "end_time"
+                OR $3 BETWEEN "start_time" AND "end_time"
+                OR "start_time" BETWEEN $2 AND $3
+                OR "end_time" BETWEEN $2 AND $3
+            )
+        ;
+    `;
+
+    pool.query(overlapDetect, [
         req.body.work_date,
-        req.body.work_hour
-    ]).then(() => {
-        res.sendStatus(201);
+        req.body.start_time,
+        req.body.end_time
+    ]).then(results => {
+        if(Number(results.rows[0].cnt) > 0){
+            console.log('Duplicated entry count :',results.rows[0].cnt);
+            res.status(400).send('Cannot insert the data due to time duplication');
+        } else {
+            console.log('Duplicated entry count :',results.rows[0].cnt);
+            pool.query(insertNewEntry, [
+                req.body.entry,
+                req.body.project_id,
+                req.body.work_date,
+                req.body.work_hour,
+                req.body.start_time,
+                req.body.end_time
+            ]).then(() => {
+                res.sendStatus(201);
+            }).catch(err => {
+                console.log('Error with inserting entries table :', err);
+                res.sendStatus(500);
+            });
+        }
     }).catch(err => {
-        console.log('Error with inserting entries table :', err);
+        console.log('Error with searching duplicated entry time :', err);
         res.sendStatus(500);
     });
+
 });
 
 router.delete('/delete', (req, res) => {

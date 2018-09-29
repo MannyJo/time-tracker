@@ -10,5 +10,5 @@ CREATE TABLE "entries" (
     "work_date" DATE NOT NULL,
 	"start_time" VARCHAR(4) NOT NULL,
 	"end_time" VARCHAR(4) NOT NULL,
-    "work_hour" NUMERIC(8,1) NOT NULL
+	"work_hour" NUMERIC(8,1) NOT NULL
 );

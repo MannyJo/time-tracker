@@ -1,4 +1,4 @@
-timeTrackerApp.controller('EntryController', ['$http', function($http){
+timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($http, $mdDialog) {
     let self = this;
 
     console.log('in EntryController');
@@ -11,82 +11,130 @@ timeTrackerApp.controller('EntryController', ['$http', function($http){
     };
 
     // order by keyword
-    self.orderByKeyword = function(keyword){
-        self.reverse = (self.orderBy===keyword)?!self.reverse:false;
+    self.orderByKeyword = function (keyword) {
+        self.reverse = (self.orderBy === keyword) ? !self.reverse : false;
         self.orderBy = keyword;
     }
 
     // delete entry
-    self.deleteEntry = function(entry){
+    self.deleteEntry = function (entry) {
         $http({
             method: 'DELETE',
             url: '/entry/delete',
             params: entry
-        }).then(function(){
-            console.log('deleting an entry is successful');
+        }).then(function () {
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title('Your entry has been successfully deleted')
+                    .textContent('You can see your entries in the history section')
+                    .ariaLabel('Your entry has been successfully deleted')
+                    .ok('OK')
+            );
             self.getEntries();
-        }).catch(function(err){
-            console.log('error:', err);
-            alert('Error with deleting entries');
+        }).catch(function (err) {
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title('Error with deleting entries')
+                    .textContent('')
+                    .ariaLabel('Error with deleting entries')
+                    .ok('OK')
+            );
         });
     }
 
     // get entries
-    self.getEntries = function(){
+    self.getEntries = function () {
         $http.get('/entry')
-            .then(function(response){
-                console.log(response.data);
+            .then(function (response) {
                 self.entries = response.data;
-            }).catch(function(err){
-                console.log('error:', err);
-                alert('Error with getting entries');
+            }).catch(function (err) {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .clickOutsideToClose(true)
+                        .title('Error with getting entries')
+                        .textContent('')
+                        .ariaLabel('Error with getting entries')
+                        .ok('OK')
+                );
             });
     }
 
     // get project list
-    self.getProjectList = function(){
+    self.getProjectList = function () {
         $http.get('/manage')
-            .then(function(response){
+            .then(function (response) {
                 self.projects = response.data.rows;
-            }).catch(function(err){
-                console.log('error:', err);
-                alert('Error with getting projects');
+            }).catch(function (err) {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .clickOutsideToClose(true)
+                        .title('Error with getting projects')
+                        .textContent('')
+                        .ariaLabel('Error with getting projects')
+                        .ok('OK')
+                );
             });
     }
 
     // add entries
-    self.addNewEntry = function(newEntry){
-        if(newEntry.projectId){
-            // date
-            let year = newEntry.date.getFullYear();
-            let month = (newEntry.date.getMonth()+1)<10?'0'+(newEntry.date.getMonth()+1):(newEntry.date.getMonth()+1);
-            let date = newEntry.date.getDate()<10?'0'+newEntry.date.getDate():newEntry.date.getDate();
-    
-            let workDate = year + '-' + month + '-' + date;
-    
+    self.addNewEntry = function (newEntry) {
+        // in entry.html, cannot check select require, so I put conditional for checking project value
+        if (newEntry.projectId) {
             // time
             let workTime = newEntry.endTime - newEntry.startTime;
-            let workHour = (workTime/1000/60/60).toFixed(1);
-            
+            let workHour = (workTime / 1000 / 60 / 60).toFixed(1);
+            // start time
+            let startTimeHours = (newEntry.startTime.getHours() < 10) ? '0' + newEntry.startTime.getHours() : newEntry.startTime.getHours() + '';
+            let startTimeMinutes = (newEntry.startTime.getMinutes() < 10) ? '0' + newEntry.startTime.getMinutes() : newEntry.startTime.getMinutes() + '';
+            // end time
+            let endTimeHours = (newEntry.endTime.getHours() < 10) ? '0' + newEntry.endTime.getHours() : newEntry.endTime.getHours() + '';
+            let endTimeMinutes = (newEntry.endTime.getMinutes() < 10) ? '0' + newEntry.endTime.getMinutes() : newEntry.endTime.getMinutes() + '';
+
             objectToServer = {
                 entry: newEntry.entry,
                 project_id: newEntry.projectId,
-                work_date: workDate,
-                work_hour: workHour
+                work_date: newEntry.date,
+                work_hour: workHour,
+                start_time: startTimeHours + startTimeMinutes,
+                end_time: endTimeHours + endTimeMinutes
             }
-    
-            $http.post('/entry', objectToServer)
-                .then(function(){
-                    console.log('Adding new entry is successful');
-                    self.getEntries();
-                }).catch(function(err){
-                    console.log('error:', err);
-                    alert('Error with adding entries');
-                });
-        } else {
-            alert('You didn\'t select any project!');
-        }
 
+            $http.post('/entry', objectToServer)
+                .then(function () {
+                    $mdDialog.show(
+                        $mdDialog.alert()
+                            .clickOutsideToClose(true)
+                            .title('Your entry has been successfully added')
+                            .textContent('You can see your entries in the history section')
+                            .ariaLabel('Your entry has been successfully added')
+                            .ok('OK')
+                    );
+                    self.getEntries();
+                }).catch(function (err) {
+                    if(err.status === 400){
+                        $mdDialog.show(
+                            $mdDialog.alert()
+                                .clickOutsideToClose(true)
+                                .title(err.data)
+                                .textContent('Please change the time and try again')
+                                .ariaLabel(err.data)
+                                .ok('OK')
+                        );
+                    } else {
+                        alert('Error with adding entries');
+                        $mdDialog.show(
+                            $mdDialog.alert()
+                                .clickOutsideToClose(true)
+                                .title('Error with adding entries')
+                                .textContent('')
+                                .ariaLabel('Error with adding entries')
+                                .ok('OK')
+                        );
+                    }
+                });
+        }
     }
 
     self.getProjectList();

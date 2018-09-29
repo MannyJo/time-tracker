@@ -27,7 +27,6 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
 
     // add new project
     self.addNewProject = function (newProject) {
-        console.log(newProject);
         $http.post('/manage', newProject)
             .then(function () {
                 $mdDialog.show(
@@ -49,6 +48,9 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
     // delete project
     self.deleteProject = function (project) {
         let totTime = Number(project.total_hours);
+
+        // if there are existing entries under this project
+        // show alert that this project cannot be deleted.
         if (totTime > 0) {
             $mdDialog.show(
                 $mdDialog.alert()
@@ -63,7 +65,6 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
                 .title('Would you like to delete this project?')
                 .textContent('Once you delete it, cannot recover anymore')
                 .ariaLabel('Would you like to delete this project?')
-                // .targetEvent(ev)
                 .ok('Please do it!')
                 .cancel('I will think about it more');
 
@@ -76,12 +77,11 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
                     $mdDialog.show(
                         $mdDialog.alert()
                             .clickOutsideToClose(true)
-                            .title('Deleting was successful')
+                            .title('The project has been deleted')
                             .textContent('')
-                            .ariaLabel('Deleting was successful')
+                            .ariaLabel('The project has been deleted')
                             .ok('Back to Work')
                     );
-                    console.log('deleting a project is successful');
                     self.getProjectList();
                 }).catch(function (err) {
                     console.log('error:', err);
