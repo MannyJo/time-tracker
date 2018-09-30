@@ -78,20 +78,20 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
             });
     }
 
-    // add entries
-    self.addNewEntry = function (newEntry, newClntForm) {
-        // in entry.html, cannot check select require, so I put conditional for checking project value
-        if (newEntry.projectId) {
-            // time
-            let workTime = newEntry.endTime - newEntry.startTime;
-            let workHour = (workTime / 1000 / 60 / 60).toFixed(1);
-            // start time
-            let startTimeHours = (newEntry.startTime.getHours() < 10) ? '0' + newEntry.startTime.getHours() : newEntry.startTime.getHours() + '';
-            let startTimeMinutes = (newEntry.startTime.getMinutes() < 10) ? '0' + newEntry.startTime.getMinutes() : newEntry.startTime.getMinutes() + '';
-            // end time
-            let endTimeHours = (newEntry.endTime.getHours() < 10) ? '0' + newEntry.endTime.getHours() : newEntry.endTime.getHours() + '';
-            let endTimeMinutes = (newEntry.endTime.getMinutes() < 10) ? '0' + newEntry.endTime.getMinutes() : newEntry.endTime.getMinutes() + '';
+    function makeObjectForServer(newEntry, key) {
+        let objectToServer = {};
 
+        // time
+        let workTime = newEntry.endTime - newEntry.startTime;
+        let workHour = (workTime / 1000 / 60 / 60).toFixed(1);
+        // start time
+        let startTimeHours = (newEntry.startTime.getHours() < 10) ? '0' + newEntry.startTime.getHours() : newEntry.startTime.getHours() + '';
+        let startTimeMinutes = (newEntry.startTime.getMinutes() < 10) ? '0' + newEntry.startTime.getMinutes() : newEntry.startTime.getMinutes() + '';
+        // end time
+        let endTimeHours = (newEntry.endTime.getHours() < 10) ? '0' + newEntry.endTime.getHours() : newEntry.endTime.getHours() + '';
+        let endTimeMinutes = (newEntry.endTime.getMinutes() < 10) ? '0' + newEntry.endTime.getMinutes() : newEntry.endTime.getMinutes() + '';
+
+        if (key === 'add') {
             objectToServer = {
                 entry: newEntry.entry,
                 project_id: newEntry.projectId,
@@ -100,6 +100,26 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
                 start_time: startTimeHours + startTimeMinutes,
                 end_time: endTimeHours + endTimeMinutes
             }
+        } else if (key === 'update') {
+            objectToServer = {
+                id: newEntry.id,
+                entry: newEntry.entry,
+                project_id: newEntry.projectId,
+                work_date: newEntry.date,
+                work_hour: workHour,
+                start_time: startTimeHours + startTimeMinutes,
+                end_time: endTimeHours + endTimeMinutes
+            }
+        }
+
+        return objectToServer;
+    }
+
+    // add entries
+    self.addNewEntry = function (newEntry, newClntForm) {
+        // in entry.html, cannot check select require, so I put conditional for checking project value
+        if (newEntry.projectId) {
+            let objectToServer = makeObjectForServer(newEntry, 'add');
 
             $http.post('/entry', objectToServer)
                 .then(function () {
@@ -148,20 +168,85 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
         }
     }
 
-    self.updateEntry = function (ev) {
+    self.updateEntry = function (ev, entry) {
         $mdDialog.show({
             controller: DialogController,
-            templateUrl: 'dialog1.tmpl.html',
+            templateUrl: '../views/entry.update.html',
             parent: angular.element(document.body),
             targetEvent: ev,
             clickOutsideToClose: true,
-            fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-        })
-            .then(function (answer) {
-                $scope.status = 'You said the information was "' + answer + '".';
-            }, function () {
-                $scope.status = 'You cancelled the dialog.';
-            });
+            fullscreen: false
+        }).then(function (answer) {
+            alert(answer);
+        }, function () { });
+
+        function DialogController($scope, $mdDialog) {
+            $scope.popupCancel = function () {
+                $mdDialog.cancel();
+            };
+
+            $scope.popupAnswer = function (answer) {
+                $mdDialog.hide(answer);
+            };
+
+            $scope.projects = self.projects;
+            $scope.entry = entry;
+            $scope.newEntry = {
+                date: new Date(entry.work_date),
+                entry: entry.entry,
+                id: entry.id
+            };
+
+            $scope.updateEntry = function (editedEntry) {
+                console.log('editedEntry :', editedEntry);
+                let objectToServer = makeObjectForServer(editedEntry, 'update');
+                console.log('objectToServer:', objectToServer);
+
+                $http({
+                    method: 'PUT',
+                    url: '/entry/update',
+                    data: objectToServer
+                }).then(function () {
+                    $mdDialog.show(
+                        $mdDialog.alert()
+                            .clickOutsideToClose(true)
+                            .title('Your entry has been successfully edited')
+                            .textContent('You can see your entries in the history section')
+                            .ariaLabel('Your entry has been successfully edited')
+                            .ok('OK')
+                    );
+                    self.getEntries();
+                    $scope.popupCancel();
+                }).catch(function (err) {
+                    // if there is duplicated time, show the message of the time
+                    if (err.status === 400) {
+                        let content = '<b>Duplicated time</b>';
+
+                        for (let time of err.data.duplicated_time) {
+                            content += '<br> > ' + time.start_time + ' ~ ' + time.end_time;
+                        }
+
+                        $mdDialog.show(
+                            $mdDialog.alert()
+                                .clickOutsideToClose(true)
+                                .title(err.data.message)
+                                .htmlContent(content)
+                                .ariaLabel(err.data.message)
+                                .ok('OK')
+                        );
+                    } else {
+                        $mdDialog.show(
+                            $mdDialog.alert()
+                                .clickOutsideToClose(true)
+                                .title('Error with editing entries')
+                                .textContent('')
+                                .ariaLabel('Error with editing entries')
+                                .ok('OK')
+                        );
+                    }
+                });
+            }
+        }
     };
 
     self.getProjectList();

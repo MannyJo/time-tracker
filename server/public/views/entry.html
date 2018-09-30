@@ -21,7 +21,7 @@
                     </div>
                 </md-input-container>
                 <md-input-container>
-                    <label>Project</label>
+                    <label>Work Date</label>
                     <md-datepicker ng-model="vm.entryForm.date" name="date" required></md-datepicker>
                     <div ng-messages="entryForm.date.$error" role="alert">
                         <div ng-message="required">Can't submit without date</div>
@@ -76,8 +76,8 @@
                         <td>{{ entry.work_date }}</td>
                         <td>{{ entry.work_hour }}</td>
                         <td>
-                                <md-button ng-click="vm.deleteEntry(entry)" class="md-warn">Delete</md-button><br>
-                                <md-button ng-click="vm.updateEntry(entry)" class="md-warn">Update</md-button>
+                            <md-button ng-click="vm.deleteEntry(entry)" class="md-warn">Delete</md-button><br>
+                            <md-button ng-click="vm.updateEntry($event, entry)" class="md-primary">Edit</md-button>
                         </td>
                     </tr>
                 </tbody>

@@ -72,3 +72,8 @@ h1 {
 #entryFormDiv {
     height: 450px;
 }
+
+.hint {
+    font-size: 12px;
+    color: rgba(167, 165, 165, 0.8);
+}
