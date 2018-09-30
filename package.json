@@ -20,6 +20,7 @@
   "homepage": "https://github.com/MannyJo/time-tracker#readme",
   "dependencies": {
     "angular": "^1.7.4",
+    "angular-chart.js": "^1.1.1",
     "angular-route": "^1.7.4",
     "angular-sanitize": "^1.7.4",
     "body-parser": "^1.18.3",

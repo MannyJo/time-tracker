@@ -1,9 +1,7 @@
-const timeTrackerApp = angular.module('TimeTrackerApp', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngSanitize']);
+const timeTrackerApp = angular.module('TimeTrackerApp', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngSanitize', 'chart.js']);
 
 timeTrackerApp.config(['$routeProvider', function($routeProvider){
-    $routeProvider.when('/', {
-        template: '<h2>Hello Kitty You\'re so pretty!</h2>'
-    }).when('/entry', {
+    $routeProvider.when('/entry', {
         templateUrl: '../views/entry.html',
         controller: 'EntryController as vm'
     }).when('/manage', {
