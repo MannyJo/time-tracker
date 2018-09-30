@@ -1,1 +1,14 @@
+<form ng-submit="vm.getProjectTime()" layout="row">
+    <md-input-container>
+        <label>Start Date</label>
+        <md-datepicker ng-model="vm.report.start_date"></md-datepicker>
+    </md-input-container>
+    <md-input-container>
+        <label>End Date</label>
+        <md-datepicker ng-model="vm.report.end_date"></md-datepicker>
+    </md-input-container>
+    <md-input-container>
+        <md-button type="submit" class="md-primary">Search</md-button>
+    </md-input-container>
+</form>
 <canvas id="myChart"></canvas>

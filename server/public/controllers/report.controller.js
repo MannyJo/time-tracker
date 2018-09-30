@@ -1,22 +1,31 @@
 timeTrackerApp.controller('ReportController', ['$http', function ($http) {
     console.log('in ReportController');
     let self = this;
+    let ctx = document.getElementById("myChart").getContext('2d');
 
-    self.labels = [];
-    self.datas = [];
+    self.report = {};
+    self.myChart;
 
-    self.getProjectTime = function(){
+    self.getProjectTime = function () {
         $http({
             method: 'GET',
-            url: '/report'
-        }).then(function(response){
-            for(let label of response.data){
+            url: '/report',
+            params: self.report
+        }).then(function (response) {
+            self.labels = [];
+            self.datas = [];
+
+            for (let label of response.data) {
                 self.labels.push(label.project_name);
                 self.datas.push(Number(label.work_hour));
             }
 
-            let ctx = document.getElementById("myChart").getContext('2d');
-            let myChart = new Chart(ctx, {
+            // prevent to show previous data
+            if(self.myChart){
+                self.myChart.destroy();
+            }
+
+            self.myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: self.labels,
@@ -43,31 +52,23 @@ timeTrackerApp.controller('ReportController', ['$http', function ($http) {
                     }]
                 },
                 options: {
+                    title: {
+                        display: true,
+                        text: 'Project'
+                    },
                     scales: {
                         yAxes: [{
                             ticks: {
-                                beginAtZero:true
+                                beginAtZero: true
                             }
                         }]
                     }
                 }
             });
-        }).catch(function(err){
+        }).catch(function (err) {
             console.log(err);
         });
     }
 
     self.getProjectTime();
-
-    // Highcharts.chart('container', {
-    
-    //     xAxis: {
-    //         categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-    //             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    //     },
-
-    //     series: [{
-    //         data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-    //     }]
-    // });
 }]);
