@@ -5,6 +5,8 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
 
     self.orderBy = '';
     self.reverse = '';
+    self.pageNum = 1;
+    self.pages = [];
     self.projects = [];
     self.projectForm = {};
 
@@ -14,15 +16,41 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
         self.orderBy = keyword;
     }
 
+    // get total row count
+    self.getPages = function(){
+        $http({
+            method: 'GET',
+            url: '/manage/page'
+        }).then(function(response){
+            for(let i = 0; i < (parseInt(response.data/10)+1); i++){
+                self.pages.push(i+1);
+            }
+        }).catch(function(err){
+            console.log('error:', err);
+            alert('Error with getting total count');
+        });
+    }
+
     // get all projects
-    self.getProjectList = function () {
-        $http.get('/manage')
-            .then(function (response) {
-                self.projects = response.data.rows;
-            }).catch(function (err) {
-                console.log('error:', err);
-                alert('Error with getting projects');
-            });
+    self.getProjectList = function (pageNum) {
+        if(!pageNum){
+            pageNum = self.pageNum;
+        }
+
+        self.pageNum = pageNum;
+
+        $http({
+            method: 'GET',
+            url: '/manage',
+            params: {
+                pageNum: pageNum
+            }
+        }).then(function (response) {
+            self.projects = response.data.rows;
+        }).catch(function (err) {
+            console.log('error:', err);
+            alert('Error with getting projects');
+        });
     }
 
     // add new project
@@ -130,6 +158,7 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
         }, function () { });
     }
 
+    self.getPages();
     self.getProjectList();
 
 }]);

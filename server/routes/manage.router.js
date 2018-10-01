@@ -5,6 +5,41 @@ const router = express.Router();
 router.get('/', (req, res) => {
     console.log('in /manage GET');
 
+    let offset = (req.query.pageNum-1)*10;
+
+    // TODO : moving to somewhere later
+    let selectQueryStr = `
+        SELECT
+            pr1."id",
+            pr1."project_name",
+            SUM(COALESCE(en1."work_hour", 0)) as "total_hours"
+        FROM
+            "projects" pr1
+            LEFT OUTER JOIN "entries" en1
+                ON pr1."id" = en1."project_id"
+        GROUP BY
+            pr1."id"
+        ORDER BY
+            pr1."id" DESC
+        LIMIT 10
+        OFFSET $1
+        ;
+    `;
+
+    pool.query(selectQueryStr, [offset])
+        .then(results => {
+            res.send(results);
+        }).catch(err => {
+            console.log('Error with searching projects table :', err);
+            res.sendStatus(500);
+        });
+});
+
+router.get('/all', (req, res) => {
+    console.log('in /manage/all GET');
+
+    let offset = (req.query.pageNum-1)*10;
+
     // TODO : moving to somewhere later
     let selectQueryStr = `
         SELECT
@@ -24,10 +59,27 @@ router.get('/', (req, res) => {
 
     pool.query(selectQueryStr)
         .then(results => {
-            // console.log('Results :', results);
             res.send(results);
         }).catch(err => {
-            console.log('Error with searching projects table :', err);
+            console.log('Error with searching all projects table :', err);
+            res.sendStatus(500);
+        });
+});
+
+router.get('/page', (req, res) => {
+    let selectPageCount = `
+        SELECT
+            COUNT(*) AS page_count
+        FROM
+            "projects"
+        ;
+    `;
+
+    pool.query(selectPageCount)
+        .then((results) => {
+            res.send(results.rows[0].page_count);
+        }).catch(err => {
+            console.log('Error with searching projects count :', err);
             res.sendStatus(500);
         });
 });

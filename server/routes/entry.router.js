@@ -5,6 +5,8 @@ const router = express.Router();
 router.get('/', (req, res) => {
     console.log('in /entry GET');
 
+    let offset = (req.query.pageNum-1)*10;
+
     // TODO : moving to somewhere later
     let selectEntryQueryStr = `
         SELECT
@@ -22,10 +24,12 @@ router.get('/', (req, res) => {
                 ON e1."project_id" = p1."id"
         ORDER BY
             e1."id" DESC
+        LIMIT 10
+        OFFSET $1
         ;
     `;
 
-    pool.query(selectEntryQueryStr)
+    pool.query(selectEntryQueryStr, [offset])
         .then(results => {
             for(row of results.rows){
                 row.work_hour = parseFloat(row.work_hour)
@@ -33,6 +37,26 @@ router.get('/', (req, res) => {
             res.send(results.rows);
         }).catch(err => {
             console.log('Error with searching entries table :', err);
+            res.sendStatus(500);
+        });
+});
+
+router.get('/page', (req, res) => {
+    let selectPageCount = `
+        SELECT
+            COUNT(*) AS page_count
+        FROM
+            "entries" e1
+            JOIN "projects" p1
+                ON e1."project_id" = p1."id"
+        ;
+    `;
+
+    pool.query(selectPageCount)
+        .then((results) => {
+            res.send(results.rows[0].page_count);
+        }).catch(err => {
+            console.log('Error with searching entries count :', err);
             res.sendStatus(500);
         });
 });

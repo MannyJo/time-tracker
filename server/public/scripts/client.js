@@ -1,7 +1,10 @@
 const timeTrackerApp = angular.module('TimeTrackerApp', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngSanitize']);
 
 timeTrackerApp.config(['$routeProvider', function($routeProvider){
-    $routeProvider.when('/entry', {
+    $routeProvider.when('/', {
+        templateUrl: '../views/entry.html',
+        controller: 'EntryController as vm'
+    }).when('/entry', {
         templateUrl: '../views/entry.html',
         controller: 'EntryController as vm'
     }).when('/manage', {

@@ -5,6 +5,8 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
 
     self.orderBy = '';
     self.reverse = '';
+    self.pageNum = 1;
+    self.pages = [];
     self.projects = [];
     self.entryForm = {
         date: new Date()
@@ -44,26 +46,53 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
         });
     }
 
+    // get total row count
+    self.getPages = function(){
+        $http({
+            method: 'GET',
+            url: '/entry/page'
+        }).then(function(response){
+            for(let i = 0; i < (parseInt(response.data/10)+1); i++){
+                self.pages.push(i+1);
+            }
+            console.log(self.pages);
+        }).catch(function(err){
+            console.log('error:', err);
+            alert('Error with getting total count');
+        });
+    }
+
     // get entries
-    self.getEntries = function () {
-        $http.get('/entry')
-            .then(function (response) {
-                self.entries = response.data;
-            }).catch(function (err) {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                        .clickOutsideToClose(true)
-                        .title('Error with getting entries')
-                        .textContent('')
-                        .ariaLabel('Error with getting entries')
-                        .ok('OK')
-                );
-            });
+    self.getEntries = function (pageNum) {
+        if(!pageNum){
+            pageNum = self.pageNum;
+        }
+
+        self.pageNum = pageNum;
+
+        $http({
+            method: 'GET',
+            url: '/entry',
+            params: {
+                pageNum: pageNum
+            }
+        }).then(function (response) {
+            self.entries = response.data;
+        }).catch(function (err) {
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title('Error with getting entries')
+                    .textContent('')
+                    .ariaLabel('Error with getting entries')
+                    .ok('OK')
+            );
+        });
     }
 
     // get project list
     self.getProjectList = function () {
-        $http.get('/manage')
+        $http.get('/manage/all')
             .then(function (response) {
                 self.projects = response.data.rows;
             }).catch(function (err) {
@@ -249,6 +278,7 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
         }
     };
 
+    self.getPages();
     self.getProjectList();
     self.getEntries();
 

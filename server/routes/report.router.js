@@ -15,7 +15,8 @@ router.get('/', (req, res) => {
         SELECT
             pj1."id",
             pj1."project_name",
-            SUM(et1."work_hour") as "work_hour"
+            SUM(et1."work_hour") AS "work_hour",
+            COUNT(et1.*) AS "entry_count"
         FROM
             "projects" pj1
             JOIN "entries" et1

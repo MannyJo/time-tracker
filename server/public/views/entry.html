@@ -51,7 +51,7 @@
         <div flex></div>
     </div>
     <div layout-margin>
-        <h2>History</h2>
+        <h2 class="subTitle">History</h2>
         <div layout="column">
             <table class="table" id="entryTable">
                 <thead>
@@ -83,7 +83,11 @@
                 </tbody>
                 <tfoot>
                     <tr class="tableFooter">
-                        <td colspan="5"></td>
+                        <td class="page" colspan="5">
+                            <div layout="row" layout-align="center center">
+                                <div ng-click="vm.getEntries(page)" ng-repeat="page in vm.pages" ng-class="{click:page==vm.pageNum}">{{page}}</div>
+                            </div>
+                        </td>
                     </tr>
                 </tfoot>
             </table>

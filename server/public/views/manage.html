@@ -21,7 +21,7 @@
         <div flex></div>
     </div>
     <div layout-margin>
-        <h2>Projects</h2>
+        <h2 class="subTitle">Projects</h2>
         <div layout="column">
             <table class="table" id="projectTable">
                 <thead>
@@ -46,7 +46,11 @@
                 </tbody>
                 <tfoot>
                     <tr class="tableFooter">
-                        <td colspan="3"></td>
+                        <td class="page" colspan="3">
+                            <div layout="row" layout-align="center center">
+                                <div ng-click="vm.getProjectList(page)" ng-repeat="page in vm.pages" ng-class="{click:page==vm.pageNum}">{{page}}</div>
+                            </div>
+                        </td>
                     </tr>
                 </tfoot>
             </table>
