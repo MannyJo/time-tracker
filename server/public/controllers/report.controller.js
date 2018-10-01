@@ -16,6 +16,7 @@ timeTrackerApp.controller('ReportController', ['$http', function ($http) {
             self.datas = [];
             self.entryCounts = [];
 
+            // setting chart data
             for (let label of response.data) {
                 self.labels.push(label.project_name);
                 self.datas.push(Number(label.work_hour));
@@ -27,6 +28,7 @@ timeTrackerApp.controller('ReportController', ['$http', function ($http) {
                 self.myChart.destroy();
             }
 
+            // drawing chart
             self.myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -86,7 +88,14 @@ timeTrackerApp.controller('ReportController', ['$http', function ($http) {
                 }
             });
         }).catch(function (err) {
-            console.log(err);
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title('Error with drawing chart')
+                    .textContent('')
+                    .ariaLabel('Error with drawing chart')
+                    .ok('OK')
+            );
         });
     }
 

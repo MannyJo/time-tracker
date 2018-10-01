@@ -7,7 +7,6 @@ router.get('/', (req, res) => {
 
     let offset = (req.query.pageNum-1)*10;
 
-    // TODO : moving to somewhere later
     let selectEntryQueryStr = `
         SELECT
             e1."id",
@@ -41,6 +40,7 @@ router.get('/', (req, res) => {
         });
 });
 
+// select total count of entries
 router.get('/page', (req, res) => {
     let selectPageCount = `
         SELECT
@@ -64,7 +64,6 @@ router.get('/page', (req, res) => {
 router.post('/', (req, res) => {
     console.log('in /entry POST');
 
-    // TODO : moving to somewhere later
     let insertNewEntry = `
         INSERT INTO "entries" (
             "entry", 

@@ -26,8 +26,14 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
                 self.pages.push(i+1);
             }
         }).catch(function(err){
-            console.log('error:', err);
-            alert('Error with getting total count');
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title('Error with getting total count')
+                    .textContent('')
+                    .ariaLabel('Error with getting total count')
+                    .ok('OK')
+            );
         });
     }
 
@@ -48,8 +54,14 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
         }).then(function (response) {
             self.projects = response.data.rows;
         }).catch(function (err) {
-            console.log('error:', err);
-            alert('Error with getting projects');
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title('Error with getting projects')
+                    .textContent('')
+                    .ariaLabel('Error with getting projects')
+                    .ok('OK')
+            );
         });
     }
 
@@ -70,8 +82,14 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
                 newClntForm.$setUntouched();
                 self.getProjectList();
             }).catch(function (err) {
-                console.log('error:', err);
-                alert('Error with adding projects');
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .clickOutsideToClose(true)
+                        .title('Error with adding projects')
+                        .textContent('')
+                        .ariaLabel('Error with adding projects')
+                        .ok('OK')
+                );
             });
     }
 
@@ -114,8 +132,14 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
                     );
                     self.getProjectList();
                 }).catch(function (err) {
-                    console.log('error:', err);
-                    alert('Error with deleting project');
+                    $mdDialog.show(
+                        $mdDialog.alert()
+                            .clickOutsideToClose(true)
+                            .title('Error with deleting project')
+                            .textContent('')
+                            .ariaLabel('Error with deleting project')
+                            .ok('OK')
+                    );
                 });
             }, function() {});
         }
@@ -154,7 +178,16 @@ timeTrackerApp.controller('ManageController', ['$http', '$mdDialog', function ($
                         .targetEvent(ev)
                 );
                 self.getProjectList();
-            })
+            }).catch(function(err){
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .clickOutsideToClose(true)
+                        .title('Error with updating project')
+                        .textContent('')
+                        .ariaLabel('Error with updating project')
+                        .ok('OK')
+                );
+            });
         }, function () { });
     }
 

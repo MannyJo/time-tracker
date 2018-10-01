@@ -55,14 +55,19 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
             for(let i = 0; i < (parseInt(response.data/10)+1); i++){
                 self.pages.push(i+1);
             }
-            console.log(self.pages);
         }).catch(function(err){
-            console.log('error:', err);
-            alert('Error with getting total count');
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title('Error with getting total count')
+                    .textContent('')
+                    .ariaLabel('Error with getting total count')
+                    .ok('OK')
+            );
         });
     }
 
-    // get entries
+    // get entries with page number
     self.getEntries = function (pageNum) {
         if(!pageNum){
             pageNum = self.pageNum;
@@ -107,6 +112,7 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
             });
     }
 
+    // function for making object 
     function makeObjectForServer(newEntry, key) {
         let objectToServer = {};
 
@@ -163,6 +169,7 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
                     self.entryForm = {
                         date: new Date()
                     };
+                    // this makes the form like the first time(untouched)
                     newClntForm.$setPristine();
                     newClntForm.$setUntouched();
                     self.getEntries();
@@ -205,17 +212,12 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
             targetEvent: ev,
             clickOutsideToClose: true,
             fullscreen: false
-        }).then(function (answer) {
-            alert(answer);
-        }, function () { });
+        }).then(function () {}, function () { });
 
+        // function for update dialog
         function DialogController($scope, $mdDialog) {
             $scope.popupCancel = function () {
                 $mdDialog.cancel();
-            };
-
-            $scope.popupAnswer = function (answer) {
-                $mdDialog.hide(answer);
             };
 
             $scope.projects = self.projects;
@@ -226,10 +228,9 @@ timeTrackerApp.controller('EntryController', ['$http', '$mdDialog', function ($h
                 id: entry.id
             };
 
+            // update entry
             $scope.updateEntry = function (editedEntry) {
-                console.log('editedEntry :', editedEntry);
                 let objectToServer = makeObjectForServer(editedEntry, 'update');
-                console.log('objectToServer:', objectToServer);
 
                 $http({
                     method: 'PUT',

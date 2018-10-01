@@ -7,7 +7,6 @@ router.get('/', (req, res) => {
 
     let offset = (req.query.pageNum-1)*10;
 
-    // TODO : moving to somewhere later
     let selectQueryStr = `
         SELECT
             pr1."id",
@@ -38,9 +37,6 @@ router.get('/', (req, res) => {
 router.get('/all', (req, res) => {
     console.log('in /manage/all GET');
 
-    let offset = (req.query.pageNum-1)*10;
-
-    // TODO : moving to somewhere later
     let selectQueryStr = `
         SELECT
             pr1."id",
@@ -89,7 +85,6 @@ router.post('/', (req, res) => {
 
     let projectName = req.body.projectName;
 
-    // TODO : moving to somewhere later
     let insertQueryStr = `
         INSERT INTO "projects" ( "project_name" )
         VALUES ( $1 )
@@ -125,6 +120,7 @@ router.delete('/delete', (req, res) => {
 
 router.put('/update', (req, res) => {
     console.log('in /manage/update PUT');
+    
     let updateProject = `
         UPDATE "projects"
         SET "project_name" = $1
