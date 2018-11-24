@@ -5,7 +5,7 @@ const pool = require('../modules/pool');
 router.get('/', (req, res) => {
     // if there is no data from client, initialize those
     if (!req.query.start_date) {
-        req.query.start_date = new Date('1970-01-01')
+        req.query.start_date = new Date('1970-01-01');
     }
     if (!req.query.end_date) {
         req.query.end_date = new Date();

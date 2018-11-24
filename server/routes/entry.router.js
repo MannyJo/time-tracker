@@ -101,7 +101,6 @@ router.post('/', (req, res) => {
         req.body.end_time
     ]).then(results => {
         if(results.rowCount > 0){
-            console.log('Duplicated entry count :',results.rowCount);
             let objectToClient = {
                 message: 'Cannot insert the data due to time duplication',
                 duplicated_time: results.rows
@@ -109,7 +108,6 @@ router.post('/', (req, res) => {
 
             res.status(400).send(objectToClient);
         } else {
-            console.log('Duplicated entry count :',results.rowCount);
             pool.query(insertNewEntry, [
                 req.body.entry,
                 req.body.project_id,
@@ -190,7 +188,6 @@ router.put('/update', (req, res) => {
         req.body.id
     ]).then(results => {
         if(results.rowCount > 0){
-            console.log('Duplicated entry count :',results.rowCount);
             let objectToClient = {
                 message: 'Cannot insert the data due to time duplication',
                 duplicated_time: results.rows
@@ -198,7 +195,6 @@ router.put('/update', (req, res) => {
 
             res.status(400).send(objectToClient);
         } else {
-            console.log('Duplicated entry count :',results.rowCount);
             pool.query(updateEntry, [
                 req.body.entry,
                 req.body.project_id,
